@@ -50,12 +50,12 @@ describe('AutomergeModel over HTTP', () => {
     const juliensDocSet = new Automerge.DocSet()
     AutomergeHttp.makeClient(url, EventSource, fetch, juliensDocSet, err => console.error(err))
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const docId = 'the-doc'
       aslaksDocSet.setDoc(docId, Automerge.init())
 
-      const joesTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addItem'])
-      joesTodoList.addItem({ name: 'HELLO' })
+      const aslaksTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addItem'])
+      aslaksTodoList.addItem({ name: 'HELLO' })
 
       juliensDocSet.registerHandler((id, doc) => {
         const juliensTodoList = AutomergeModel.make(juliensDocSet, docId, TodoList, ['addItem'])
@@ -103,6 +103,7 @@ describe('AutomergeModel', () => {
     const docId = 'the-doc'
     const aslaksDocSet = new Automerge.DocSet()
     aslaksDocSet.setDoc(docId, Automerge.init())
+
     const mattsDocSet = new Automerge.DocSet()
 
     const aslaksTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addItem'])
@@ -115,6 +116,15 @@ describe('AutomergeModel', () => {
 
     assert.deepEqual(mattsTodoList.doc, {
       items: [{ name: 'buy milk', done: false }],
+    })
+
+    mattsTodoList.addItem({ name: 'eat crisps' })
+
+    assert.deepEqual(aslaksTodoList.doc, {
+      items: [
+        { name: 'buy milk', done: false },
+        { name: 'eat crisps', done: false }
+      ],
     })
   })
 })
