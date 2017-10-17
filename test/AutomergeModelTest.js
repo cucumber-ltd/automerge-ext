@@ -11,9 +11,9 @@ const AutomergeHttp = require('../lib/AutomergeHttp')
 const AutomergeTestHelper = require('../lib/AutomergeTestHelper')
 
 class TodoList {
-  addTodo({ name }) {
+  addTodo({ text }) {
     if (this._doc.todos === undefined) this._doc.todos = []
-    this._doc.todos.push({ name, done: false })
+    this._doc.todos.push({ text, done: false })
   }
 
   getTodos() {
@@ -43,11 +43,11 @@ describe('AutomergeModel over HTTP', () => {
       aslaksDocSet.setDoc(docId, Automerge.init())
 
       const aslaksTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addTodo'])
-      aslaksTodoList.addTodo({ name: 'HELLO' })
+      aslaksTodoList.addTodo({ text: 'HELLO' })
 
       juliensDocSet.registerHandler((id, doc) => {
         const juliensTodoList = AutomergeModel.make(juliensDocSet, docId, TodoList, ['addTodo'])
-        assert.deepEqual(juliensTodoList.getTodos(), [{ name: 'HELLO', done: false }])
+        assert.deepEqual(juliensTodoList.getTodos(), [{ text: 'HELLO', done: false }])
         resolve()
       })
     })
@@ -61,9 +61,9 @@ describe('AutomergeModel', () => {
     joesDocSet.setDoc(docId, Automerge.init())
 
     const joesTodoList = AutomergeModel.make(joesDocSet, docId, TodoList, ['addTodo'])
-    joesTodoList.addTodo({ name: 'buy milk' })
+    joesTodoList.addTodo({ text: 'buy milk' })
     assert.deepEqual(joesTodoList.doc, {
-      todos: [{ name: 'buy milk', done: false }],
+      todos: [{ text: 'buy milk', done: false }],
     })
   })
 
@@ -78,12 +78,12 @@ describe('AutomergeModel', () => {
     link.open()
 
     const aslaksTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addTodo'])
-    aslaksTodoList.addTodo({ name: 'buy milk' })
+    aslaksTodoList.addTodo({ text: 'buy milk' })
 
     const mattsTodoList = AutomergeModel.make(mattsDocSet, docId, TodoList, ['addTodo'])
 
     assert.deepEqual(mattsTodoList.doc, {
-      todos: [{ name: 'buy milk', done: false }],
+      todos: [{ text: 'buy milk', done: false }],
     })
   })
 
@@ -95,7 +95,7 @@ describe('AutomergeModel', () => {
     const mattsDocSet = new Automerge.DocSet()
 
     const aslaksTodoList = AutomergeModel.make(aslaksDocSet, docId, TodoList, ['addTodo'])
-    aslaksTodoList.addTodo({ name: 'buy milk' })
+    aslaksTodoList.addTodo({ text: 'buy milk' })
 
     const link = AutomergeTestHelper.link(aslaksDocSet, mattsDocSet)
     link.open()
@@ -103,15 +103,15 @@ describe('AutomergeModel', () => {
     const mattsTodoList = AutomergeModel.make(mattsDocSet, docId, TodoList, ['addTodo'])
 
     assert.deepEqual(mattsTodoList.doc, {
-      todos: [{ name: 'buy milk', done: false }],
+      todos: [{ text: 'buy milk', done: false }],
     })
 
-    mattsTodoList.addTodo({ name: 'eat crisps' })
+    mattsTodoList.addTodo({ text: 'eat crisps' })
 
     assert.deepEqual(aslaksTodoList.doc, {
       todos: [
-        { name: 'buy milk', done: false },
-        { name: 'eat crisps', done: false }
+        { text: 'buy milk', done: false },
+        { text: 'eat crisps', done: false }
       ],
     })
   })

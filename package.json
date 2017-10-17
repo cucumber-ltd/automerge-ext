@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "Aslak Hellesøy",
   "license": "MIT",
+  "dependencies": {
+    "ssestream": "^1.0.0",
+    "uuid": "^3.1.0"
+  },
   "devDependencies": {
     "automerge": "^0.5.0",
     "body-parser": "^1.18.2",
@@ -12,9 +16,5 @@
     "express": "^4.16.1",
     "mocha": "^3.5.3",
     "node-fetch": "^1.7.3"
-  },
-  "dependencies": {
-    "ssestream": "^1.0.0",
-    "uuid": "^3.1.0"
   }
 }
